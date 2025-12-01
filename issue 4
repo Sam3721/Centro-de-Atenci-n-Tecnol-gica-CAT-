@@ -1,0 +1,28 @@
+
+app.get('/project/summary', (req, res) => {
+  res.json({
+    ok: true,
+    totalRequests: REQUESTS.length,
+    developers: ["Samuel", "Equipo Técnico X"],
+    status: "Proyecto finalizado",
+    message: "El sistema fue completado con éxito."
+  });
+});
+
+// Simula exportar datos (no genera archivo real)
+app.get('/project/export', (req, res) => {
+  res.json({
+    ok: true,
+    exportType: "JSON",
+    data: REQUESTS,
+    message: "Datos exportados correctamente (simulado)."
+  });
+});
+
+// Limpieza final (simulación)
+app.delete('/project/cleanup', (req, res) => {
+  REQUESTS.length = 0;
+  res.json({
+    ok: true,
+  });
+});
