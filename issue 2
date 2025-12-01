@@ -1,0 +1,87 @@
+// ------------------ Solución Issue 2: Funciones principales ------------------
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+// ------------------ Mock DB (temporal) ------------------
+const REQUESTS = [
+  { id: 1, userRole: "docente", status: "pendiente", priority: "alta", message: "Necesito soporte con el proyector." },
+  { id: 2, userRole: "estudiante", status: "resuelta", priority: "media", message: "No puedo acceder al aula virtual." }
+];
+
+// ------------------ Función principal 1: Obtener solicitudes ------------------
+app.get('/requests', (req, res) => {
+  try {
+    res.json({
+      ok: true,
+      data: REQUESTS,
+      message: "Solicitudes cargadas correctamente."
+    });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: "Error cargando las solicitudes" });
+  }
+});
+
+// ------------------ Función principal 2: Crear nueva solicitud ------------------
+app.post('/requests', (req, res) => {
+  const { userRole, message, priority } = req.body;
+
+  if (!userRole || !message) {
+    return res.status(400).json({ ok: false, error: "Faltan datos obligatorios." });
+  }
+
+  const newRequest = {
+    id: REQUESTS.length + 1,
+    userRole,
+    message,
+    priority: priority ?? "media",
+    status: "pendiente"
+  };
+
+  REQUESTS.push(newRequest);
+
+  res.json({
+    ok: true,
+    message: "Solicitud registrada.",
+    data: newRequest
+  });
+});
+
+// ------------------ Función principal 3: Actualizar estado de solicitud ------------------
+app.put('/requests/:id/status', (req, res) => {
+  const id = parseInt(req.params.id);
+  const { status } = req.body;
+
+  const request = REQUESTS.find(r => r.id === id);
+
+  if (!request) {
+    return res.status(404).json({ ok: false, error: "Solicitud no encontrada." });
+  }
+
+  request.status = status ?? request.status;
+
+  res.json({
+    ok: true,
+    message: "Estado actualizado.",
+    data: request
+  });
+});
+
+// ------------------ Función principal 4: Filtrar por rol ------------------
+app.get('/requests/role/:role', (req, res) => {
+  const role = req.params.role.toLowerCase();
+
+  const filtered = REQUESTS.filter(r => r.userRole.toLowerCase() === role);
+
+  res.json({
+    ok: true,
+    count: filtered.length,
+    data: filtered
+  });
+});
+
+// ------------------ Iniciar servidor (simulación) ------------------
+app.listen(3000, () => {
+  console.log("Servidor funcionando en http://localhost:3000");
+});
