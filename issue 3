@@ -1,0 +1,31 @@
+// ------------------ Solución Issue 3: Pruebas y Validación ------------------
+
+// validar datos de creación de solicitud
+function validarSolicitud(data) {
+  if (!data.userRole) return "El rol es obligatorio.";
+  if (!data.message) return "El mensaje es obligatorio.";
+  return null;
+}
+
+// Endpoint para correr pruebas internas
+app.get('/test/health', (req, res) => {
+  res.json({
+    ok: true,
+    status: "Sistema operativo",
+    timestamp: new Date()
+  });
+});
+
+// Endpoint para validar datos sin crearlos
+app.post('/test/validate', (req, res) => {
+  const error = validarSolicitud(req.body);
+
+  if (error) {
+    return res.status(400).json({ ok: false, error });
+  }
+
+  res.json({
+    ok: true,
+    message: "Datos válidos."
+  });
+});
