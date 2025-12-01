@@ -1,0 +1,9 @@
+// Issue 1: Documentación inicial
+// Estado: DONE
+// Solución: Se creó README con descripción, objetivos y requisitos.
+const ISSUE_1 = {
+  id: "doc_inicial",
+  name: "Documentación inicial",
+  status: "Done",
+  result: "README creado con propósito del proyecto y guía rápida."
+};
